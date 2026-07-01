@@ -1,12 +1,13 @@
 {
-  "name": "ai-worker",
+  "name": "cloudflare-ai-chat",
   "version": "1.0.0",
+  "description": "Cloudflare Workers AI Chat",
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev"
   },
   "devDependencies": {
-    "wrangler": "^4.25.0"
+    "wrangler": "^4.106.0"
   }
 }
