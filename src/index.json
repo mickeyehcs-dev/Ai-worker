@@ -1,0 +1,66 @@
+export default {
+  async fetch(request, env) {
+
+    // Home page
+    if (request.method === "GET") {
+      return new Response(
+        JSON.stringify({
+          status: "online",
+          message: "Cloudflare AI Worker",
+          usage: "Send POST /chat"
+        }, null, 2),
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+    }
+
+    if (request.method !== "POST") {
+      return new Response("Method Not Allowed", {
+        status: 405
+      });
+    }
+
+    try {
+
+      const body = await request.json();
+
+      const prompt = body.message || "Hello";
+
+      const response = await env.AI.run(
+        "@cf/google/gemma-3-1b-it",
+        {
+          messages: [
+            {
+              role: "system",
+              content: "You are a helpful AI assistant."
+            },
+            {
+              role: "user",
+              content: prompt
+            }
+          ],
+          max_tokens: 150
+        }
+      );
+
+      return Response.json({
+        success: true,
+        response
+      });
+
+    } catch (err) {
+
+      return Response.json({
+        success: false,
+        error: err.message
+      }, {
+        status: 500
+      });
+
+    }
+
+  }
+};
